@@ -1,6 +1,7 @@
 package edu.luc.cs.laufer.cs473.expressions
 
 import ast._
+import scala.collection.immutable.Map
 
 import scala.util.parsing.combinator.RegexParsers
 
@@ -68,7 +69,53 @@ object WorkflowLexer extends RegexParsers {
   def comma = positioned { "," ^^ (_ => ast.comma()) }
 }
 
+//Right-hand side of an assignment
+trait RValue[T] {
+  def get: T
+}
+
+//Left-hand side of an assignment
+trait LValue[T] extends RValue[T] {
+  def set(value: T): LValue[T]
+}
+
+//Cell for storing a value
+case class Cell[T](var value: T) extends LValue[T] {
+  override def get = value
+  override def set(value: T) = { this.value = value; this }
+}
+
+object Cell {
+  val NULL = Cell(0)
+}
+
 object behaviors {
+
+  type Store = Map[String, LValue[Int]]
+
+  def apply(store: Store)(s: Expr): LValue[Int] = s match {
+    case Constant(value)    => Cell(value)
+    case Plus(left, right)  => Cell(apply(store)(left).get + apply(store)(right).get)
+    case Minus(left, right) => Cell(apply(store)(left).get - apply(store)(right).get)
+    case Times(left, right) => Cell(apply(store)(left).get * apply(store)(right).get)
+    case Div(left, right)   => Cell(apply(store)(left).get / apply(store)(right).get)
+    case Variable(name)     => store(name)
+    case Assignment(left, right) => {
+      val rvalue = apply(store)(right)
+      val lvalue = apply(store)(left)
+      lvalue.set(rvalue.get)
+    }
+    case Sequence(statements @ _*) =>
+      statements.foldLeft(Cell.NULL.asInstanceOf[LValue[Int]])((c, s) => apply(store)(s))
+    case While(guard, body) => {
+      var gvalue = apply(store)(guard)
+      while (gvalue.get != 0) {
+        apply(store)(body)
+        gvalue = apply(store)(guard)
+      }
+      Cell.NULL
+    }
+  }
 
   def evaluate(e: Expr): Int = e match {
     case Constant(c) => c

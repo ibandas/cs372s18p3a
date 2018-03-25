@@ -30,18 +30,10 @@ case class Sequence(statements: Expr*) extends Expr {
 case class While(guard: Expr, body: Expr) extends BinaryExpr(guard, body)
 case class Assignment(left: Expr, right: Expr) extends BinaryExpr(left, right)
 
-
 //Stuff from original expressions
 abstract class UnaryExpr(expr: Expr) extends Expr { require { expr != null } }
 case class UMinus(expr: Expr) extends UnaryExpr(expr)
 case class Mod(left: Expr, right: Expr) extends BinaryExpr(left, right)
-
-
-
-
-
-
-
 
 //My Edits
 sealed trait WorkflowToken extends Positional
