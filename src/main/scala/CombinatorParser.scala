@@ -29,4 +29,9 @@ object CombinatorParser extends JavaTokenParsers {
     | "-" ~> factor ^^ { case e => UMinus(e) }
     | "(" ~ expr ~ ")" ^^ { case _ ~ e ~ _ => e }
   )
+
+  /** statement ::= ident = expr | while (expr) statement | { statement , ... , statement } */
+  def statement: Parser[Statement] = (
+    ident
+  )
 }
