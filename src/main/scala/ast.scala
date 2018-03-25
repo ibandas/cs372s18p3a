@@ -35,21 +35,22 @@ abstract class UnaryExpr(expr: Expr) extends Expr { require { expr != null } }
 case class UMinus(expr: Expr) extends UnaryExpr(expr)
 case class Mod(left: Expr, right: Expr) extends BinaryExpr(left, right)
 
-//My Edits
-sealed trait WorkflowToken extends Positional
-
-case class identifier(str: String) extends WorkflowToken
-case class literal(str: String) extends WorkflowToken
-case class indentation(spaces: Int) extends WorkflowToken
-case class exit() extends WorkflowToken
-case class readInput() extends WorkflowToken
-case class callService() extends WorkflowToken
-case class switch() extends WorkflowToken
-case class otherwise() extends WorkflowToken
-case class colon() extends WorkflowToken
-case class arrow() extends WorkflowToken
-case class equals() extends WorkflowToken
-case class comma() extends WorkflowToken
-case class indent() extends WorkflowToken
-case class dedent() extends WorkflowToken
-
+/**
+  * My Edits
+  * sealed trait WorkflowToken extends Positional
+  *
+  * case class identifier(str: String) extends WorkflowToken
+  * case class literal(str: String) extends WorkflowToken
+  * case class indentation(spaces: Int) extends WorkflowToken
+  * case class exit() extends WorkflowToken
+  * case class readInput() extends WorkflowToken
+  * case class callService() extends WorkflowToken
+  * case class switch() extends WorkflowToken
+  * case class otherwise() extends WorkflowToken
+  * case class colon() extends WorkflowToken
+  * case class arrow() extends WorkflowToken
+  * case class equals() extends WorkflowToken
+  * case class comma() extends WorkflowToken
+  * case class indent() extends WorkflowToken
+  * case class dedent() extends WorkflowToken
+  */

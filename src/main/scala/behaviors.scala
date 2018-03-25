@@ -5,6 +5,7 @@ import scala.collection.immutable.Map
 
 import scala.util.parsing.combinator.RegexParsers
 
+/*
 object WorkflowLexer extends RegexParsers {
   override def skipWhitespace = true
 
@@ -68,6 +69,7 @@ object WorkflowLexer extends RegexParsers {
   def equals = positioned { "==" ^^ (_ => ast.equals()) }
   def comma = positioned { "," ^^ (_ => ast.comma()) }
 }
+*/
 
 //Right-hand side of an assignment
 trait RValue[T] {
@@ -184,4 +186,5 @@ object behaviors {
 
   val EOL = scala.util.Properties.lineSeparator
   val INDENT = ".."
+  val DEDENT = ".."
 }
