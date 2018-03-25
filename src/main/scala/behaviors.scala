@@ -2,6 +2,72 @@ package edu.luc.cs.laufer.cs473.expressions
 
 import ast._
 
+import scala.util.parsing.combinator.RegexParsers
+
+object WorkflowLexer extends RegexParsers {
+  override def skipWhitespace = true
+
+  override val whiteSpace = "[ \t\r\f]+".r
+
+  def tokens: Parser[List[WorkflowToken]] = {
+    phrase(rep1(exit | readInput | callService | switch | otherwise | colon | arrow | equals | comma | literal
+      | identifier | indentation)) ^^ { rawTokens => processIndentations(rawTokens) }
+  }
+
+  private def processIndentations(tokens: List[WorkflowToken], indents: List[Int] = List(0)): List[WorkflowToken] = {
+    tokens.headOption match {
+
+      //Increase in indentation level, push into stack
+      case Some(indentation(spaces)) if spaces > indents.head =>
+        indent() :: processIndentations(tokens.tail, spaces :: indents)
+
+      //Decrease in indentation level, pop from stack (dedent)
+      case Some(indentation(spaces)) if spaces < indents.head =>
+        val (dropped, kept) = indents.partition(_ > spaces)
+        (dropped map (_ => dedent())) ::: processIndentations(tokens.tail, kept)
+
+      //Indentation level unchanged, no tokens
+      case Some(indentation(spaces)) if spaces == indents.head =>
+        processIndentations(tokens.tail, indents)
+
+      //Others tokens are ignored
+      case Some(token) =>
+        token :: processIndentations(tokens.tail, indents)
+
+      //Produce final dedents for levels remaining
+      case None =>
+        indents.filter(_ > 0).map(_ => dedent())
+    }
+  }
+  def identifier: Parser[identifier] = positioned {
+    "[a-zA-Z_][a-zA-Z0-9_]*".r ^^ { str => ast.identifier(str) }
+  }
+
+  def literal: Parser[ast.literal] = positioned {
+    """"[^"]*"""".r ^^ { str =>
+      val content = str.substring(1, str.length - 1)
+      ast.literal(content)
+    }
+  }
+
+  def indentation: Parser[ast.indentation] = positioned {
+    "\n[ ]*".r ^^ { whiteSpace =>
+      val nSpaces = whiteSpace.length - 1
+      ast.indentation(nSpaces)
+    }
+  }
+
+  def exit = positioned { "exit" ^^ (_ => ast.exit()) }
+  def readInput = positioned { "read input" ^^ (_ => ast.readInput()) }
+  def callService = positioned { "call service" ^^ (_ => ast.callService()) }
+  def switch = positioned { "switch" ^^ (_ => ast.switch()) }
+  def otherwise = positioned { "otherwise" ^^ (_ => ast.otherwise()) }
+  def colon = positioned { ":" ^^ (_ => ast.colon()) }
+  def arrow = positioned { "->" ^^ (_ => ast.arrow()) }
+  def equals = positioned { "==" ^^ (_ => ast.equals()) }
+  def comma = positioned { "," ^^ (_ => ast.comma()) }
+}
+
 object behaviors {
 
   def evaluate(e: Expr): Int = e match {

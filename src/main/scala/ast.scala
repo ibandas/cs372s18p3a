@@ -1,5 +1,7 @@
 package edu.luc.cs.laufer.cs473.expressions.ast
 
+import scala.util.parsing.input.Positional
+
 /** An initial algebra of arithmetic expressions. */
 sealed trait Expr
 case class Constant(value: Int) extends Expr
@@ -13,7 +15,8 @@ case class Div(left: Expr, right: Expr) extends BinaryExpr(left, right)
 case class Mod(left: Expr, right: Expr) extends BinaryExpr(left, right)
 
 //My Edits
-sealed trait WorkflowToken
+sealed trait WorkflowToken extends Positional
+
 case class identifier(str: String) extends WorkflowToken
 case class literal(str: String) extends WorkflowToken
 case class indentation(spaces: Int) extends WorkflowToken
