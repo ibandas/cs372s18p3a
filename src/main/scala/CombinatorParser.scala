@@ -34,30 +34,41 @@ object CombinatorParser extends JavaTokenParsers {
 
   /** statement ::= ident = expr | while (expr) statement | { statement , ... , statement } */
   //NOTE: The blocks in statements were changed from "statement". Maybe change back?
-  //TODO: Add implementation of ";", conditional, and block (expression, assignment, and loop is done already)
+  //TODO: Can't add ";" after expr for whatever reason, fix it
   def statement: Parser[Expr] = (
-    ident ~ "=" ~ expr ^^ { case s ~ _ ~ r => Assignment(Variable(s), r) }
-    | "while" ~ "(" ~> expr ~ ")" ~ block ^^ { case g ~ _ ~ b => While(g, b) }
-    | "{" ~> repsep(block, ",") <~ "}" ^^ { case ss => Sequence(ss: _*) }
+    assignment
+    | conditional
+    | loop
+    | block
   )
 
-  //TODO: assignment ::= ident "=" expression ";"
+  //assignment ::= ident "=" expression ";"
   def assignment: Parser[Expr] = (
-    ident ~ "=" ~ expr ~ ";" ^^ {case g ~ _ ~ b => While(g, b)}
+    ident ~ "=" ~ expr ~ ";" ^^ {case s ~ _ ~ r ~ _ => Assignment(Variable(s), r)}
   )
 
-  //TODO: conditional ::= "if" "(" expression ")" block [ "else" block ] (FIX Case)
+  //conditional ::= "if" "(" expression ")" block [ "else" block ] (FIX Case)
+  //TODO: Create a function in AST and add to case
   def conditional: Parser[Expr] = (
     "if" ~ "(" ~> expr ~ ")" ~ block ~ "[" ~ "else" ~ block ~ "]" ^^ {case g ~ _ ~ b => While(g, b)}
   )
 
-  //TODO: loop ::= "while" "(" expression ")" block
+  //loop ::= "while" "(" expression ")" block
   def loop: Parser[Expr] = (
     "while" ~ "(" ~> expr ~ ")" ~ block ^^ {case g ~ _ ~ b => While(g, b)}
   )
 
-  //TODO: block ::= "{" statement* "}"
+  //block ::= "{" statement* "}"
   def block: Parser[Expr] = (
-    "{" ~ statement ~ "}" ^^ {case s ~ _ ~ r => Sequence()}
+    "{" ~> repsep(block, ",") <~ "}" ^^ { case ss => Sequence(ss: _*) }
   )
 }
+
+//Below is a version before I changed it some more to what I think works
+/*
+def statement: Parser[Expr] = (
+    ident ~ "=" ~ expr ^^ { case s ~ _ ~ r => Assignment(Variable(s), r) }
+    | "while" ~ "(" ~> expr ~ ")" ~ block ^^ { case g ~ _ ~ b => While(g, b) }
+    | "{" ~> repsep(block, ",") <~ "}" ^^ { case ss => Sequence(ss: _*) }
+  )
+ */
