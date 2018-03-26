@@ -35,7 +35,7 @@ object CombinatorParser extends JavaTokenParsers {
   /** statement ::= ident = expr | while (expr) statement | { statement , ... , statement } */
   //TODO: Fix case class for expr ";"
   def statement: Parser[Expr] = (
-    expr ~ ";" ^^ {case}
+    expr ~ ";" ^^ { null }
     | assignment
     | conditional
     | loop
@@ -44,19 +44,19 @@ object CombinatorParser extends JavaTokenParsers {
 
   //assignment ::= ident "=" expression ";"
   def assignment: Parser[Expr] = (
-    ident ~ "=" ~ expr ~ ";" ^^ {case s ~ _ ~ r ~ _ => Assignment(Variable(s), r)}
+    ident ~ "=" ~ expr ~ ";" ^^ { case s ~ _ ~ r ~ _ => Assignment(Variable(s), r) }
   )
 
   //conditional ::= "if" "(" expression ")" block [ "else" block ] (FIX Case)
   //TODO: Create a function in AST and add to case
   //It had "~> expr" before. Error went away when switching to "~"
   def conditional: Parser[Expr] = (
-    "if" ~ "(" ~ expr ~ ")" ~ block ~ "[" ~ "else" ~ block ~ "]" ^^ {case _ ~ _ ~ g ~ _ ~ b ~ _ ~ _ ~  t ~ _=> Conditional(g,b,t)}
+    "if" ~ "(" ~ expr ~ ")" ~ block ~ "[" ~ "else" ~ block ~ "]" ^^ { case _ ~ _ ~ g ~ _ ~ b ~ _ ~ _ ~ t ~ _ => Conditional(g, b, t) }
   )
 
   //loop ::= "while" "(" expression ")" block
   def loop: Parser[Expr] = (
-    "while" ~ "(" ~> expr ~ ")" ~ block ^^ {case g ~ _ ~ b => While(g, b)}
+    "while" ~ "(" ~> expr ~ ")" ~ block ^^ { case g ~ _ ~ b => While(g, b) }
   )
 
   //block ::= "{" statement* "}"
