@@ -33,9 +33,10 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   /** statement ::= ident = expr | while (expr) statement | { statement , ... , statement } */
-  //Should statement have more than below?
+  //TODO: Fix case class for expr ";"
   def statement: Parser[Expr] = (
-    assignment
+    expr ~ ";" ^^ {case}
+    | assignment
     | conditional
     | loop
     | block
