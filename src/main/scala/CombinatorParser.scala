@@ -34,6 +34,7 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   /** statement ::= ident = expr | while (expr) statement | { statement , ... , statement } */
+  //NOTE: The blocks in statements were changed from "statement". Maybe change back?
   //TODO: Add implementation of ";", conditional, and block (expression, assignment, and loop is done already)
   def statement: Parser[Expr] = (
     ident ~ "=" ~ expr ^^ { case s ~ _ ~ r => Assignment(Variable(s), r) }
