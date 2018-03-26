@@ -22,12 +22,15 @@ object CombinatorParser extends JavaTokenParsers {
       case l ~ Some("%" ~ r) => Mod(l, r)
     }
 
-  /** factor ::= wholeNumber | "+" factor | "-" factor | "(" expr ")" */
+  //def ident:
+
+  /** factor ::= ident | wholeNumber | "+" factor | "-" factor | "(" expr ")" */
   def factor: Parser[Expr] = (
     wholeNumber ^^ { case s => Constant(s.toInt) }
     | "+" ~> factor ^^ { case e => e }
     | "-" ~> factor ^^ { case e => UMinus(e) }
     | "(" ~ expr ~ ")" ^^ { case _ ~ e ~ _ => e }
+    | ident ^^ {case s => Variable(s)}
   )
 
   /** statement ::= ident = expr | while (expr) statement | { statement , ... , statement } */
@@ -40,12 +43,9 @@ object CombinatorParser extends JavaTokenParsers {
 
   //assignment ::= ident "=" expression ";"
 
-
   //conditional ::= "if" "(" expression ")" block [ "else" block ]
 
-
   //loop ::= "while" "(" expression ")" block
-
 
   //block ::= "{" statement* "}"
 }
