@@ -48,10 +48,10 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   //conditional ::= "if" "(" expression ")" block [ "else" block ] (FIX Case)
-  //TODO: Create a function in AST and add to case
+  //TODO: Make it where you don't always need an else
   //It had "~> expr" before. Error went away when switching to "~"
   def conditional: Parser[Expr] = (
-    "if" ~ "(" ~ expr ~ ")" ~ block ~ "[" ~ "else" ~ block ~ "]" ^^ { case _ ~ _ ~ g ~ _ ~ b ~ _ ~ _ ~ t ~ _ => Conditional(g, b, t) }
+    "if" ~ "(" ~ expr ~ ")" ~ block ~ "else" ~ block ^^ { case _ ~ _ ~ g ~ _ ~ b ~ _ ~ t => Conditional(g, b, t) }
   )
 
   //loop ::= "while" "(" expression ")" block
@@ -61,7 +61,7 @@ object CombinatorParser extends JavaTokenParsers {
 
   //block ::= "{" statement* "}"
   def block: Parser[Expr] = (
-    "{" ~> repsep(block, ",") <~ "}" ^^ { case ss => Sequence(ss: _*) }
+    "{" ~> repsep(statement, ",") <~ "}" ^^ { case ss => Sequence(ss: _*) }
   )
 }
 

@@ -23,12 +23,12 @@ object CombinatorCalculator extends App {
     if (result.isEmpty) {
       println("This expression could not be parsed")
     } else {
-      //import behaviors._
+      import behaviors._
       val statement = result.get
       println("The parsed expression is: ")
-      //println(toFormattedString(statement))
-      //println("It has size " + size(statement) + " and height " + height(statement))
-      //println("It evaluates to " + evaluate(statement))
+      println(toFormattedString(statement))
+      println("It has size " + size(statement) + " and height " + height(statement))
+      println("It evaluates to " + evaluate(statement))
     }
   }
 
