@@ -93,7 +93,7 @@ object Cell {
 
 object behaviors {
 
-  type Store = Map[String, LValue[Int]]
+  /*type Store = Map[String, LValue[Int]]
 
   def apply(store: Store)(s: Expr): LValue[Int] = s match {
     case Constant(value)    => Cell(value)
@@ -117,7 +117,7 @@ object behaviors {
       }
       Cell.NULL
     }
-  }
+  }*/
 
   def evaluate(e: Expr): Int = e match {
     case Constant(c) => c

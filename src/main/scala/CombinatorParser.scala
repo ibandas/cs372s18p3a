@@ -30,15 +30,15 @@ object CombinatorParser extends JavaTokenParsers {
     | "+" ~> factor ^^ { case e => e }
     | "-" ~> factor ^^ { case e => UMinus(e) }
     | "(" ~ expr ~ ")" ^^ { case _ ~ e ~ _ => e }
-    | ident ^^ {case s => Variable(s)}
+    | ident ^^ { case s => Variable(s) }
   )
 
   /** statement ::= ident = expr | while (expr) statement | { statement , ... , statement } */
   //TODO: Add implementation of ";", conditional, and block (expression, assignment, and loop is done already)
   def statement: Parser[Expr] = (
     ident ~ "=" ~ expr ^^ { case s ~ _ ~ r => Assignment(Variable(s), r) }
-    | "while" ~ "(" ~> expr ~ ")" ~ statement ^^ { case g ~ _ ~ b => While(g, b) }
-    | "{" ~> repsep(statement, ",") <~ "}" ^^ { case ss => Sequence(ss: _*) }
+    | "while" ~ "(" ~> expr ~ ")" ~ block ^^ { case g ~ _ ~ b => While(g, b) }
+    | "{" ~> repsep(block, ",") <~ "}" ^^ { case ss => Sequence(ss: _*) }
   )
 
   //TODO: assignment ::= ident "=" expression ";"
@@ -48,4 +48,7 @@ object CombinatorParser extends JavaTokenParsers {
   //TODO: loop ::= "while" "(" expression ")" block
 
   //TODO: block ::= "{" statement* "}"
+  def block: Parser[Expr] = (
+    "{" ~ statement ~ "}" ^^ {case s ~ _ ~ r => Sequence()}
+  )
 }

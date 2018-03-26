@@ -44,5 +44,4 @@ class PegParser(val input: ParserInput) extends Parser {
 
   def ws(c: Char) = rule { c ~ WhiteSpace }
 
-
 }
