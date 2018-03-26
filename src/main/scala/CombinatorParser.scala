@@ -33,8 +33,7 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   /** statement ::= ident = expr | while (expr) statement | { statement , ... , statement } */
-  //NOTE: The blocks in statements were changed from "statement". Maybe change back?
-  //TODO: Can't add ";" after expr for whatever reason, fix it
+  //Should statement have more than below?
   def statement: Parser[Expr] = (
     assignment
     | conditional
@@ -49,8 +48,9 @@ object CombinatorParser extends JavaTokenParsers {
 
   //conditional ::= "if" "(" expression ")" block [ "else" block ] (FIX Case)
   //TODO: Create a function in AST and add to case
+  //It had "~> expr" before. Error went away when switching to "~"
   def conditional: Parser[Expr] = (
-    "if" ~ "(" ~> expr ~ ")" ~ block ~ "[" ~ "else" ~ block ~ "]" ^^ {case g ~ _ ~ b => While(g, b)}
+    "if" ~ "(" ~ expr ~ ")" ~ block ~ "[" ~ "else" ~ block ~ "]" ^^ {case _ ~ _ ~ g ~ _ ~ b ~ _ ~ _ ~  t ~ _=> Conditional(g,b,t)}
   )
 
   //loop ::= "while" "(" expression ")" block

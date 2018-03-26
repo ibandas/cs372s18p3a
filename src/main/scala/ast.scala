@@ -12,6 +12,12 @@ abstract class BinaryExpr(left: Expr, right: Expr) extends Expr {
   require { (left != null) && (right != null) }
 }
 
+abstract class TriExpr(left: Expr, right: Expr, down: Expr) extends Expr {
+  require { (left != null) && (right != null) && (down != null) }
+}
+
+case class Conditional(left: Expr, guard: Expr, right: Expr) extends TriExpr(left, guard, right)
+
 case class Plus(left: Expr, right: Expr) extends BinaryExpr(left, right)
 case class Minus(left: Expr, right: Expr) extends BinaryExpr(left, right)
 case class Times(left: Expr, right: Expr) extends BinaryExpr(left, right)
