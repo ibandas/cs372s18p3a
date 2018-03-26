@@ -3,6 +3,7 @@ package edu.luc.cs.laufer.cs473.expressions
 import scala.util.parsing.combinator.JavaTokenParsers
 import ast._
 
+//Ident and wholeNumber come from JavaTokenParsers
 object CombinatorParser extends JavaTokenParsers {
 
   /** expr ::= term { { "+" | "-" } term }* */
@@ -21,8 +22,6 @@ object CombinatorParser extends JavaTokenParsers {
       case l ~ Some("/" ~ r) => Div(l, r)
       case l ~ Some("%" ~ r) => Mod(l, r)
     }
-
-  //def ident:
 
   /** factor ::= ident | wholeNumber | "+" factor | "-" factor | "(" expr ")" */
   def factor: Parser[Expr] = (
@@ -43,9 +42,14 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   //TODO: assignment ::= ident "=" expression ";"
+  def assignment: Parser[Expr] = (
+    ident ~ "=" ~ expr ~ ";" ^^ {case g ~ _ ~ b => While(g, b)}
+  )
 
-  //TODO: conditional ::= "if" "(" expression ")" block [ "else" block ]
-
+  //TODO: conditional ::= "if" "(" expression ")" block [ "else" block ] (FIX Case)
+  def conditional: Parser[Expr] = (
+    "if" ~ "(" ~> expr ~ ")" ~ block ~ "[" ~ "else" ~ block ~ "]" ^^ {case g ~ _ ~ b => While(g, b)}
+  )
 
   //TODO: loop ::= "while" "(" expression ")" block
   def loop: Parser[Expr] = (
