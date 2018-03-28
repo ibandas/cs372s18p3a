@@ -33,7 +33,8 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   /** statement ::= ident = expr | while (expr) statement | { statement , ... , statement } */
-  //TODO: Fix case class for expr ";"
+  //TODO: Assess which is at a higher level (Block higher than loop)
+  //Do I need to anything else to statement?
   def statement: Parser[Expr] = (
     expr ~ ";" ^^ { null }
     | assignment
@@ -48,10 +49,10 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   //conditional ::= "if" "(" expression ")" block [ "else" block ] (FIX Case)
-  //TODO: Make it where you don't always need an else
   //It had "~> expr" before. Error went away when switching to "~"
   def conditional: Parser[Expr] = (
     "if" ~ "(" ~ expr ~ ")" ~ block ~ "else" ~ block ^^ { case _ ~ _ ~ g ~ _ ~ b ~ _ ~ t => Conditional(g, b, t) }
+    | "if" ~ "(" ~ expr ~ ")" ~ block ^^ { case _ ~ _ ~ g ~ _ ~ t => binaryConditional(g, t) }
   )
 
   //loop ::= "while" "(" expression ")" block

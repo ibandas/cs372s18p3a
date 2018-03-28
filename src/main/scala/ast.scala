@@ -6,6 +6,7 @@ import scala.util.parsing.input.Positional
 //Stuff similar to misc-scala
 sealed trait Expr
 case class Constant(value: Int) extends Expr
+case class Statement(value: Expr) extends Expr
 
 /** A binary statement with two non-null children. */
 abstract class BinaryExpr(left: Expr, right: Expr) extends Expr {
@@ -16,7 +17,13 @@ abstract class TriExpr(left: Expr, right: Expr, down: Expr) extends Expr {
   require { (left != null) && (right != null) && (down != null) }
 }
 
-case class Conditional(left: Expr, guard: Expr, right: Expr) extends TriExpr(left, guard, right)
+case class Conditional(left: Expr, guard: Expr, right: Expr) extends TriExpr(left, guard, right) {
+  require { (left != null) && (guard != null) && (right != null) }
+}
+
+case class binaryConditional(left: Expr, right: Expr) extends BinaryExpr(left, right) {
+  require { (left != null) && (right != null) }
+}
 
 case class Plus(left: Expr, right: Expr) extends BinaryExpr(left, right)
 case class Minus(left: Expr, right: Expr) extends BinaryExpr(left, right)

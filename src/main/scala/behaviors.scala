@@ -119,6 +119,9 @@ object behaviors {
     }
   }*/
 
+  //TODO: case block => S.map(Expr)
+  //Above: Because it's a sequence of statements for block, you want to make different cases for it to go into
+  //whatever expression that it is.
   def evaluate(e: Expr): Int = e match {
     case Constant(c) => c
     case UMinus(r)   => -evaluate(r)
@@ -127,6 +130,9 @@ object behaviors {
     case Times(l, r) => evaluate(l) * evaluate(r)
     case Div(l, r)   => evaluate(l) / evaluate(r)
     case Mod(l, r)   => evaluate(l) % evaluate(r)
+    //case Assignment(l, r) => Variable(l) = r
+    //case Sequence(l)      => evaluate(l)
+    //case While(l, r)      => evaluate(l)
   }
 
   def size(e: Expr): Int = e match {
