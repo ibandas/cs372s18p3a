@@ -57,12 +57,12 @@ object CombinatorParser extends JavaTokenParsers {
 
   //loop ::= "while" "(" expression ")" block
   def loop: Parser[Expr] = (
-    "while" ~ "(" ~> expr ~ ")" ~ block ^^ { case g ~ _ ~ b => While(g, b) }
+    "while" ~ "(" ~ expr ~ ")" ~ block ^^ { case _ ~ _ ~ g ~ _ ~ b => While(g, b) }
   )
 
   //block ::= "{" statement* "}"
   def block: Parser[Expr] = (
-    "{" ~> repsep(statement, ",") <~ "}" ^^ { case ss => Sequence(ss: _*) }
+    "{" ~> repsep(statement, "") <~ "}" ^^ { case ss => Sequence(ss: _*) }
   )
 }
 
