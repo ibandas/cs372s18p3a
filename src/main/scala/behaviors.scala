@@ -156,33 +156,60 @@ object behaviors {
   }
 
   def toFormattedString(prefix: String)(e: Expr): String = e match {
-    case Constant(c) => prefix + c.toString
-    case UMinus(r)   => buildUnaryExprString(prefix, "UMinus", toFormattedString(prefix + INDENT)(r))
-    case Plus(l, r)  => buildExprString(prefix, "Plus", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
-    case Minus(l, r) => buildExprString(prefix, "Minus", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
-    case Times(l, r) => buildExprString(prefix, "Times", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
-    case Div(l, r)   => buildExprString(prefix, "Div", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
-    case Mod(l, r)   => buildExprString(prefix, "Mod", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case Constant(c)             => prefix + c.toString
+    case Variable(c)             => prefix + c.toString
+    case UMinus(r)               => buildUnaryExprString(prefix, "UMinus", toFormattedString(prefix + INDENT)(r))
+    case Plus(l, r)              => buildExprString(prefix, "Plus", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case Minus(l, r)             => buildExprString(prefix, "Minus", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case Times(l, r)             => buildExprString(prefix, "Times", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case Div(l, r)               => buildExprString(prefix, "Div", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case Mod(l, r)               => buildExprString(prefix, "Mod", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case binaryConditional(l, r) => binaryConditionalBuild(prefix, "if", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case Assignment(l, r)        => assignmentBuild(prefix, ";", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
     //case Statement(l) =>
     //case Assignment(l, r)
   }
 
   def toFormattedString(e: Expr): String = toFormattedString("")(e)
 
-  //def newLineStatement()
-
   def buildExprString(prefix: String, nodeString: String, leftString: String, rightString: String) = {
     val result = new StringBuilder(prefix)
+    result.append("{")
+    result.append(EOL)
+    result.append(INDENT)
     result.append(nodeString)
     result.append("(")
-    result.append(EOL)
     result.append(leftString)
-    result.append(", ")
+    result.append(")")
     result.append(EOL)
     result.append(rightString)
     result.append(")")
     result.toString
   }
+
+  def binaryConditionalBuild(prefix: String, nodeString: String, leftString: String, rightString: String) = {
+    val result = new StringBuilder(prefix)
+    result.append(nodeString)
+    result.append("(")
+    result.append(leftString)
+    result.append(")")
+    result.append("{")
+    result.append(EOL)
+    result.append(rightString)
+    result.append(EOL)
+    result.append("}")
+    result.toString
+  }
+
+  def assignmentBuild(prefix: String, nodeString: String, leftString: String, rightString: String) = {
+    val result = new StringBuilder(prefix)
+    result.append(leftString)
+    result.append(" =")
+    result.append(rightString)
+    result.append(nodeString)
+    result.toString
+  }
+
 
   def buildUnaryExprString(prefix: String, nodeString: String, exprString: String) = {
     val result = new StringBuilder(prefix)
@@ -203,6 +230,6 @@ object behaviors {
   }
 
   val EOL = scala.util.Properties.lineSeparator
-  val INDENT = ".."
-  val DEDENT = ".."
+  val INDENT = "  "
+  val DEDENT = "  "
 }
