@@ -25,7 +25,7 @@ object TestFixtures {
 
   val complexStatement = "if (1) { x = 2; }"
 
-  val complex1Statement = "binaryConditional(Constant(1),Sequence(List(Assignment(Variable(x), Constant(2)))))"
+  val complex1Statement = binaryConditional(Constant(1), Sequence(Assignment(Variable("x"), Constant(2))))
 
   val simpleStatement = "x = 5;"
 
