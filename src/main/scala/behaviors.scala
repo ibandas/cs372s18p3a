@@ -163,9 +163,13 @@ object behaviors {
     case Times(l, r) => buildExprString(prefix, "Times", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
     case Div(l, r)   => buildExprString(prefix, "Div", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
     case Mod(l, r)   => buildExprString(prefix, "Mod", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    //case Statement(l) =>
+    //case Assignment(l, r)
   }
 
   def toFormattedString(e: Expr): String = toFormattedString("")(e)
+
+  //def newLineStatement()
 
   def buildExprString(prefix: String, nodeString: String, leftString: String, rightString: String) = {
     val result = new StringBuilder(prefix)
@@ -188,6 +192,14 @@ object behaviors {
     result.append(exprString)
     result.append(")")
     result.toString
+  }
+
+  def buildStatementString(prefix: String, postfix: String) = {
+    val result = new StringBuilder(prefix)
+    result.append("{")
+    result.append(EOL)
+    result.append(prefix)
+    //result.append
   }
 
   val EOL = scala.util.Properties.lineSeparator

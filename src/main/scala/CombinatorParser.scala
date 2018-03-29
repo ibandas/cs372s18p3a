@@ -63,6 +63,7 @@ object CombinatorParser extends JavaTokenParsers {
   //block ::= "{" statement* "}"
   def block: Parser[Expr] = (
     "{" ~> repsep(statement, "") <~ "}" ^^ { case ss => Sequence(ss: _*) }
+    | "{" ~> repsep(statement, ",") <~ "}" ^^ { case ss => Sequence(ss: _*) }
   )
 }
 
