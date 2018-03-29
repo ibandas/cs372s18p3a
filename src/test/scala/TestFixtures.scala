@@ -51,6 +51,10 @@ object TestFixtures {
 
   val complexWhileString = "while (y) { r = r + x; y = y - 1; }"
 
+  val complexBinaryConditionStatement = binaryConditional(Constant(4), Sequence(Assignment(Variable("r"), Plus(Variable("r"), Variable("x"))), Assignment(Variable("y"), Minus(Variable("y"), Constant(1)))))
+
+  val complexBinaryConditionString = "if (4) { r = r + x; y = y + 1; }"
+
   val complex2 =
     Mod(
       Minus(

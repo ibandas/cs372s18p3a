@@ -23,6 +23,7 @@ class TestCombinatorParser extends FunSuite {
   val parsedStatementExpr4 = CombinatorParser.parseAll(CombinatorParser.statement, blockString)
   val parsedStatementExpr5 = CombinatorParser.parseAll(CombinatorParser.statement, complexAssignmentString)
   val parsedStatementExpr6 = CombinatorParser.parseAll(CombinatorParser.statement, complexWhileString)
+  val parsedStatementExpr7 = CombinatorParser.parseAll(CombinatorParser.statement, complexBinaryConditionString)
   test("parser works 1") { assert(parsedExpr.get === complex1) }
   test("parser works 2") { assert(parsedExpr2.get === complex1) }
   test("binary conditional parser works 1") { assert(parsedStatementExpr.get === binaryConditionalStatement) }
@@ -31,4 +32,5 @@ class TestCombinatorParser extends FunSuite {
   test("block statement parser works 4") { assert(parsedStatementExpr4.get === blockStatement) }
   test("complex assignment statement parser works 5") { assert(parsedStatementExpr5.get === complexAssignmentStatement) }
   test("complex while statement parser works 6") { assert(parsedStatementExpr6.get === complexWhileStatement) }
+  test("complex binary conditional statement parser works 7") { assert(parsedStatementExpr7.get === complexBinaryConditionStatement) }
 }
