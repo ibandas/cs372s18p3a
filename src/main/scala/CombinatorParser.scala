@@ -36,7 +36,7 @@ object CombinatorParser extends JavaTokenParsers {
   //TODO: Assess which is at a higher level (Block higher than loop)
   //Do I need to anything else to statement?
   def statement: Parser[Expr] = (
-    expr ~ ";" ^^ { null }
+    expr ~ ";" ^^ { case e ~ _ => e }
     | assignment
     | conditional
     | loop

@@ -210,7 +210,6 @@ object behaviors {
     result.toString
   }
 
-
   def buildUnaryExprString(prefix: String, nodeString: String, exprString: String) = {
     val result = new StringBuilder(prefix)
     result.append(nodeString)
