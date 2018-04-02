@@ -39,7 +39,9 @@ object CombinatorCalculator extends App {
   } else {
     print("Enter infix expression: ")
     scala.io.Source.stdin.getLines foreach { line =>
-      processStatement(line)
+      val splitthis = line.split("(?<=;)")
+      splitthis.foreach(word => processStatement(word))
+      //processStatement(line)
       print("Enter infix expression: ")
     }
   }

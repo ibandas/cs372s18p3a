@@ -44,9 +44,8 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   //assignment ::= ident "=" expression ";"
-  def assignment: Parser[Expr] = (
+  def assignment: Parser[Expr] =
     ident ~ "=" ~ expr ~ ";" ^^ { case s ~ _ ~ r ~ _ => Assignment(Variable(s), r) }
-  )
 
   //conditional ::= "if" "(" expression ")" block [ "else" block ] (FIX Case)
   //It had "~> expr" before. Error went away when switching to "~"
@@ -56,9 +55,8 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   //loop ::= "while" "(" expression ")" block
-  def loop: Parser[Expr] = (
+  def loop: Parser[Expr] =
     "while" ~ "(" ~ expr ~ ")" ~ block ^^ { case _ ~ _ ~ g ~ _ ~ b => While(g, b) }
-  )
 
   //block ::= "{" statement* "}"
   def block: Parser[Expr] = (
